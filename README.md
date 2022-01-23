@@ -68,10 +68,10 @@ Next.js contains both front-end and back-end logic. To understand the layout of 
 Middleware is defined in `lib/middleware.ts`. Here's an example showing how to use middleware in an endpoint:
 
 ```typescript
-export default nc<ApiRequest, ApiResponse<Data>>()
+export default nc<Request, Response<Data>>()
   .use(withSession)   // <-- middleware
   .use(withPrisma)    // <-- middleware
-  .get(async (req: ApiRequest, res: NextApiResponse<Data>) => {
+  .get(async (req: Request, res: Response<Data>) => {
     const userId = req.query.id;
     if (userId && (req.session!.user?.id === userId)) {
       const user = req.prisma!.getUserById(userId);
