@@ -31,7 +31,7 @@ _____________|','   ///_/-------------/   |
 
 ## Build & Run
 
-Make sure [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/) are installed. Then run...
+Make sure [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/) are installed. Note that environment variables are defined in `.env`. **You should set these vars, like `PROJECT_NAME`, to appropriate values before running.** To run, just do...
 
 ```sh
 docker-compose up
