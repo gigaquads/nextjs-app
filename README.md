@@ -38,7 +38,7 @@ docker-compose up
 # or `docker-compose up -d` to run in the background.
 ```
 
-When all services are up, you can visit the URLS below. **Use an incognito window to avoid conflicts with brownser extensions.**
+When all services are up, you can visit the URLS below. **Use an incognito window to avoid conflicts with browser extensions.**
 
 | URL                                              | Service                       |
 | ------------------------------------------------ | ----------------------------- |
