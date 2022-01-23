@@ -1,0 +1,84 @@
+version: "3.9"
+services:
+  # app: Next.js app (frontend AND backend application)
+  app:
+    build:
+      context: ./src/app
+      dockerfile: Dockerfile
+    container_name: app
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "${BASE_DATABASE_URL}/${POSTGRES_DB}"
+    volumes:
+      - "./src/app:/usr/src/app"
+      - "./src/app/node_modules:/usr/src/app/node_modules"
+      - "./src/app/.next:/usr/src/app/.next"
+    depends_on:
+      - db
+      - minio
+    links:
+      - db
+      - minio
+
+  # db: stores app data
+  db:
+    image: "postgres:14.1"
+    container_name: db
+    restart: always
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: pg_isready -U ${POSTGRES_USER}
+    env_file:
+      - .env
+    volumes:
+      - "postgres-data:/var/lib/postgresql/data"
+    ports:
+      - "5431:5432"
+
+  # pristma database admin GUI
+  # go to: http://localhost:5555
+  studio:
+    container_name: studio
+    image: timothyjmiller/prisma-studio:latest
+    restart: always
+    depends_on:
+      - app
+      - db
+    ports:
+      - "5555:5555"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_URL: "${BASE_DATABASE_URL}/${POSTGRES_DB}"
+      POSTGRES_USERNAME: ${POSTGRES_USER}
+      POSTGRES_DATABASE: ${POSTGRES_DB}
+
+  # minio: stores image files
+  minio:
+    image: "minio/minio"
+    container_name: minio
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    env_file:
+      - .env
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - "minio-data:/data"
+    command: server --address 0.0.0.0:9000 /data
+
+volumes:
+  postgres-data:
+    driver: local
+  minio-data:
+    driver: local

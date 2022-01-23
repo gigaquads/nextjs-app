@@ -1,0 +1,87 @@
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum AssetType {
+  GOODS
+  SERVICES
+  NFT
+}
+
+enum AssetVisibility {
+  OWNER       // only owner can see it
+  PUBLIC      // everyone can see it
+  RESTRICTED  // to select group of ids
+}
+
+enum AssetStatus {
+  DRAFT       // just created/incomplete
+  COMPLETE    // complete but not published
+  DELETED     // hidden from owner, gone from app
+}
+
+// Models for NextAuth (Account, Session, VerificationToken)
+// -----------------------------------------------------------------
+model Account {
+  id                  String @id @default(cuid())
+  userId              String
+  type                String
+  provider            String
+  providerAccountId   String
+  refreshToken        String? @db.Text @map("refresh_token")
+  accessToken         String? @db.Text @map("access_token")
+  expiresAt           Int? @map("expires_at")
+  tokenType           String? @map("token_type")
+  scope               String?
+  idToken             String? @db.Text @map("id_token")
+  sessionState        String? @map("session_state")
+  oauthTokenSecret    String? @map("oauth_token_secret")
+  oauthToken          String? @map("oauthToken")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @default(now())
+  user                User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id                  String @id @default(cuid())
+  sessionToken        String @unique
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @default(now())
+  userId              String
+  expires             DateTime
+  user                User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier          String
+  token               String @unique
+  expires             DateTime
+
+  @@index([token])
+  @@unique([identifier, token])
+}
+
+// Application models
+// -----------------------------------------------------------------
+model User {
+  id                  String @id @default(cuid())
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @default(now())
+  name                String?
+  email               String? @unique
+  emailVerified       DateTime?
+  image               String?
+  accounts            Account[]
+  sessions            Session[]
+
+  @@index([email, createdAt])
+}
