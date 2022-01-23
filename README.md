@@ -77,7 +77,7 @@ export default nc<ApiRequest, ApiResponse<Data>>()
       const user = req.prisma!.getUserById(userId);
       res.status(200).json(user);
     } else {
-      res.status(404).json("user not found")
+      res.status(404).end("user not found")
     }
   }
 ```
