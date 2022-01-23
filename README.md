@@ -27,7 +27,7 @@ _____________|','   ///_/-------------/   |
 | `app`     | The Next.js app, both front-end and back-end.                     |
 | `db`      | Postgresql database.                                              |
 | `minio`   | [Minio](https://min.io/), for storing image files, simulating s3. |
-| `studio`  | DB admin tool that works with Prisma.                             |
+| `studio`  | [Prisma Studio](https://www.prisma.io/studio), a DB admin tool.   |
 
 ## Build & Run
 
@@ -47,7 +47,7 @@ When all services are up, you can visit the URLS below. **Use an incognito windo
 
 ## Database Management
 
-The database is managed by [Prisma](https://www.prisma.io/). Tables, relationships, etc. are defined in `schema.prisma`. Prisma auto-generates the typescript client and database migrations from this file. _Note: the typescript client and database schema is auto-migrated when restarting the_ `nextjs` _Docker container via_ `docker restart nextjs`.
+The database is managed by [Prisma](https://www.prisma.io/). Tables, relationships, etc. are defined in [`schema.prisma`](https://github.com/gigaquads/nextjs-app/blob/main/src/app/schema.prisma). Prisma auto-generates the typescript client and database migrations from this file. _Note: the typescript client and database schema is auto-migrated when restarting the_ `nextjs` _Docker container via_ `docker restart nextjs`.
 
 ### DB-related Yarn Commands:
 
