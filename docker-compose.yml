@@ -7,6 +7,11 @@ services:
       dockerfile: Dockerfile
     container_name: app
     restart: always
+    healthcheck:
+      test: curl -sS http://localhost:3000 || exit 1
+      timeout: 5s
+      interval: 10s
+      retries: 10
     ports:
       - "3000:3000"
     env_file:
@@ -34,7 +39,10 @@ services:
         max-size: 10m
         max-file: "3"
     healthcheck:
-      test: pg_isready -U ${POSTGRES_USER}
+      test: pg_isready -q -d ${POSTGRES_DB} -U ${POSTGRES_USER}
+      timeout: 10s
+      interval: 5s
+      retries: 10
     env_file:
       - .env
     volumes:
@@ -49,8 +57,10 @@ services:
     image: timothyjmiller/prisma-studio:latest
     restart: always
     depends_on:
-      - app
-      - db
+      app:
+        condition: service_healthy
+      db:
+        condition: service_healthy
     ports:
       - "5555:5555"
     env_file:
