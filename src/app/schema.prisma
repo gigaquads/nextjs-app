@@ -7,24 +7,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-enum AssetType {
-  GOODS
-  SERVICES
-  NFT
-}
-
-enum AssetVisibility {
-  OWNER       // only owner can see it
-  PUBLIC      // everyone can see it
-  RESTRICTED  // to select group of ids
-}
-
-enum AssetStatus {
-  DRAFT       // just created/incomplete
-  COMPLETE    // complete but not published
-  DELETED     // hidden from owner, gone from app
-}
-
 // Models for NextAuth (Account, Session, VerificationToken)
 // -----------------------------------------------------------------
 model Account {
